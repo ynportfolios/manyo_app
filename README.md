@@ -1,24 +1,14 @@
-# README
-
-This README would normally document whatever steps are necessary to get the
-application up and running.
-
-Things you may want to cover:
-
-* Ruby version
-
-* System dependencies
-
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+## テーブルスキーマ
+* User
+  - deviseを使用
+* Task
+  - user_id bigint
+  - title string
+  - deadline datetime
+  - priority integer
+  - status integer
+* Labelling
+  - task_id bigint
+  - label_id bigint
+* Label
+  - name string
