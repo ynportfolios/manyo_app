@@ -3,7 +3,8 @@
   - deviseを使用
 * Task
   - user_id bigint
-  - title string
+  - name string
+  - content text
   - deadline datetime
   - priority integer
   - status integer
