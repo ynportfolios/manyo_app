@@ -1,9 +1,12 @@
 ## テーブルスキーマ
 * User
-  - deviseを使用
+  - name string
+  - email string
+  - password_digest string
 * Task
   - user_id bigint
-  - title string
+  - name string
+  - content text
   - deadline datetime
   - priority integer
   - status integer
