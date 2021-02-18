@@ -2,7 +2,7 @@
 * User
   - name string
   - email string
-  - password string
+  - password_digeststring
 * Task
   - user_id bigint
   - name string
