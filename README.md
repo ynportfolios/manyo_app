@@ -1,6 +1,8 @@
 ## テーブルスキーマ
 * User
-  - deviseを使用
+  - name
+  - email
+  - password
 * Task
   - user_id bigint
   - name string
