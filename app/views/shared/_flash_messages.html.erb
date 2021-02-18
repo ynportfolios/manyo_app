@@ -1,0 +1,15 @@
+<% flash.each do |msg_type, msg| %>
+  <% if msg.instance_of?(Array) %>
+    <% msg.each do |m| %>
+      <div class="alert alert-<%= msg_type %>" role="alert" id="alert">
+        <a href="#" class="close" data-dismiss="alert">×</a>
+        <%= m %>
+      </div>
+    <% end %>
+  <% else %>
+    <div class="alert alert-<%= msg_type %>" role="alert" id="alert">
+      <a href="#" class="close" data-dismiss="alert">×</a>
+      <%= msg %>
+    </div>
+  <% end %>
+<% end %>
