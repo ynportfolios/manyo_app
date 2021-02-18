@@ -1,8 +1,8 @@
 ## テーブルスキーマ
 * User
-  - name
-  - email
-  - password
+  - name string
+  - email string
+  - password string
 * Task
   - user_id bigint
   - name string
