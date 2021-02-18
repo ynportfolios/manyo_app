@@ -1,5 +1,5 @@
 class TasksController < ApplicationController
-  before_action :set_task, only: [:show]
+  before_action :set_task, only: [:show, :edit, :update]
 
   def index
     @tasks = Task.all
@@ -19,8 +19,21 @@ class TasksController < ApplicationController
       flash[:success] = 'タスクを登録しました。'
       redirect_to @task
     else
-      flash.now[:danger] = 'タスク登録に失敗しました。'
+      flash.now[:danger] = 'タスクの登録に失敗しました。'
       render new_task_path
+    end
+  end
+
+  def edit
+  end
+
+  def update
+    if @task.update(task_params)
+      flash[:success] = 'タスクを編集しました。'
+      redirect_to @task
+    else
+      flash.now[:danger] = 'タスクの編集に失敗しました。'
+      render :edit
     end
   end
 
