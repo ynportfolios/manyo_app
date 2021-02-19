@@ -21,7 +21,7 @@ RSpec.describe 'タスク管理機能', type: :system do
       # ここにタスク詳細ページに、テストコードで作成したデータがタスク詳細画面にhave_contentされているか（含まれているか）を確認（期待）するコードを書く
       expect(page).to have_content 'task_name'
       expect(page).to have_content 'task_content'
-      expect(page).to have_content '2021-03-01 01:01:00 +0900'
+      expect(page).to have_content '2021-03-01'
       end
     end
   end
