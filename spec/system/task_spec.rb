@@ -13,6 +13,7 @@ RSpec.describe 'タスク管理機能', type: :system do
       # ここに「タスク詳細」というラベル名の入力欄に内容をfill_in（入力）する処理を書く
       fill_in 'タスク詳細', with: 'task_content'
       fill_in '終了期限', with: DateTime.new(2021, 3, 1, 1, 1)
+      select '未着手', from: 'ステータス'
       # 3. 「登録する」というvalue（表記文字）のあるボタンをクリックする
       # ここに「登録する」というvalue（表記文字）のあるボタンをclick_onする（クリックする）する処理を書く
       click_on '登録する'
@@ -22,6 +23,7 @@ RSpec.describe 'タスク管理機能', type: :system do
       expect(page).to have_content 'task_name'
       expect(page).to have_content 'task_content'
       expect(page).to have_content '2021-03-01'
+      expect(page).to have_content '未着手'
       end
     end
   end

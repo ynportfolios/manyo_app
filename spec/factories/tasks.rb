@@ -4,5 +4,6 @@ FactoryBot.define do
     name { 'test_name' }
     content { 'test_content' }
     deadline { DateTime.new(2021, 3, 1, 1, 1) }
+    status { 0 }
   end
 end
