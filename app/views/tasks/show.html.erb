@@ -20,5 +20,10 @@
   <%= @task.created_at.strftime('%Y-%m-%d %H:%M:%S') %>
 </p>
 
+<p>
+  <strong>ステータス:</strong>
+  <%= @task.status %>
+</p>
+
 <%= link_to '編集', edit_task_path(@task) %> |
 <%= link_to '戻る', root_path %>
