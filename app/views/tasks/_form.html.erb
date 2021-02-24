@@ -30,6 +30,11 @@
   </div>
 
   <div>
+    <%= form.label :priority %>
+    <%= form.select :priority, Task.priorities.keys, {} %>
+  </div>
+
+  <div>
     <%= form.submit %>
   </div>
 <% end %>

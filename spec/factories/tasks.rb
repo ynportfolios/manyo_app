@@ -5,5 +5,6 @@ FactoryBot.define do
     content { 'test_content' }
     deadline { DateTime.new(2021, 3, 1, 1, 1) }
     status { 0 }
+    priority { 0 }
   end
 end

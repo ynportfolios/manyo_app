@@ -7,4 +7,5 @@ ja:
         name: タスク名
         content: タスク詳細
         deadline: 終了期限
-        status: ステータス 
+        status: ステータス
+        priority: 優先順位
