@@ -12,6 +12,8 @@ RSpec.describe 'タスク管理機能', type: :system do
       fill_in 'タスク名', with: 'task_name'
       # ここに「タスク詳細」というラベル名の入力欄に内容をfill_in（入力）する処理を書く
       fill_in 'タスク詳細', with: 'task_content'
+      fill_in '終了期限', with: DateTime.new(2021, 3, 1, 1, 1)
+      select '未着手', from: 'ステータス'
       # 3. 「登録する」というvalue（表記文字）のあるボタンをクリックする
       # ここに「登録する」というvalue（表記文字）のあるボタンをclick_onする（クリックする）する処理を書く
       click_on '登録する'
@@ -20,6 +22,8 @@ RSpec.describe 'タスク管理機能', type: :system do
       # ここにタスク詳細ページに、テストコードで作成したデータがタスク詳細画面にhave_contentされているか（含まれているか）を確認（期待）するコードを書く
       expect(page).to have_content 'task_name'
       expect(page).to have_content 'task_content'
+      expect(page).to have_content '2021-03-01'
+      expect(page).to have_content '未着手'
       end
     end
   end
@@ -40,11 +44,36 @@ RSpec.describe 'タスク管理機能', type: :system do
     context 'タスクが作成日時の降順に並んでいる場合' do
       it '新しいタスクが一番上に表示される' do
         # ここに実装する
-        task_old = FactoryBot.create(:task, name: 'task_old')
-        task_new = FactoryBot.create(:task, name: 'task_new')
+        task_old = FactoryBot.create(:task, name: 'task_old', created_at: DateTime.new(2021, 3, 1, 1, 2))
+        task_new = FactoryBot.create(:task, name: 'task_new', created_at: DateTime.new(2021, 3, 1, 1, 3))
         visit tasks_path
         task_list = all('tbody tr')
-        expect(task_list.first).to have_content 'task_new'
+        expect(task_list[0]).to have_content 'task_new'
+        expect(task_list[1]).to have_content 'task_old'
+      end
+    end
+    context 'タスクが終了期限の降順に並んでいる場合' do
+      it '終了期限が遠いタスクが一番上に表示される' do
+        # ここに実装する
+        task_1 = FactoryBot.create(:task, name: 'task_1', deadline: DateTime.new(2021, 3, 1, 1, 3))
+        task_2 = FactoryBot.create(:task, name: 'task_2', deadline: DateTime.new(2021, 3, 1, 1, 2))
+        visit tasks_path
+        click_on '終了期限でソートする'
+        task_list = all('tbody tr')
+        expect(task_list[0]).to have_content 'task_1'
+        expect(task_list[1]).to have_content 'task_2'
+      end
+    end
+    context 'タスクが優先順位の降順に並んでいる場合' do
+      it '優先順位が高いタスクが一番上に表示される' do
+        # ここに実装する
+        task_1 = FactoryBot.create(:task, name: 'task_1', created_at: DateTime.new(2021, 3, 1, 1, 2), priority: 2)
+        task_2 = FactoryBot.create(:task, name: 'task_2', created_at: DateTime.new(2021, 3, 1, 1, 3), priority: 1)
+        visit tasks_path
+        click_on '優先順位でソートする'
+        task_list = all('tbody tr')
+        expect(task_list[0]).to have_content 'task_1'
+        expect(task_list[1]).to have_content 'task_2'
       end
     end
   end
@@ -57,5 +86,45 @@ RSpec.describe 'タスク管理機能', type: :system do
         expect(page).to have_content 'task_content'
        end
      end
+  end
+  describe '検索機能' do
+    before do
+      # 必要に応じて、テストデータの内容を変更して構わない
+      FactoryBot.create(:task, name: "task", status: 1)
+      FactoryBot.create(:task, name: "sample", status: 2)
+    end
+    context 'タイトルであいまい検索をした場合' do
+      it "検索キーワードを含むタスクで絞り込まれる" do
+        visit root_path
+        # タスクの検索欄に検索ワードを入力する (例: task)
+        fill_in 'task_name_field', with: 'task'
+        # 検索ボタンを押す
+        click_on '検索'
+        expect(page).to have_content 'task'
+        expect(page).to_not have_content 'sample'
+      end
+    end
+    context 'ステータス検索をした場合' do
+      it "ステータスに完全一致するタスクが絞り込まれる" do
+        # ここに実装する
+        # プルダウンを選択する「select」について調べてみること
+        visit root_path
+        select '未着手', from: 'status_field'
+        click_on '検索'
+        expect(page).to have_content 'task'
+        expect(page).to_not have_content 'sample'
+      end
+    end
+    context 'タイトルのあいまい検索とステータス検索をした場合' do
+      it "検索キーワードをタイトルに含み、かつステータスに完全一致するタスク絞り込まれる" do
+        # ここに実装する
+        visit root_path
+        fill_in 'task_name_field', with: 'sample'
+        select '着手', from: 'status_field'
+        click_on '検索'
+        expect(page).to have_content 'sample'
+        expect(page).to_not have_content 'task'
+      end
+    end
   end
 end
