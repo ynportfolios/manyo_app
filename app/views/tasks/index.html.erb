@@ -8,7 +8,7 @@
   <%= f.submit :検索%>
 <% end %>
 
-<table>
+<table class="table">
   <thead>
     <tr>
       <th>タスク名</th>
@@ -36,9 +36,10 @@
     <% end %>
   </tbody>
 </table>
+<%= paginate @tasks %>
 
 <br>
 
-<%= link_to "終了期限でソートする", tasks_path(sort_expired: "true") %>
-<%= link_to "優先順位でソートする", tasks_path(sort_priority: "true") %>
+<%= link_to "終了期限でソートする", tasks_path(sort_expired: "true") %> |
+<%= link_to "優先順位でソートする", tasks_path(sort_priority: "true") %> |
 <%= link_to 'タスクを登録する', new_task_path %>
