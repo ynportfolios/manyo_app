@@ -5,6 +5,7 @@
     <tr>
       <th>ユーザ名</th>
       <th>タスク数</th>
+      <th>管理者権限</th>
     </tr>
   </thead>
 
@@ -13,6 +14,11 @@
       <tr>
         <td><%= user.name %></td>
         <td><%= user.tasks.count %></td>
+        <% if user.admin_flg %>
+          <td>あり</td>
+        <% else %>
+          <td>なし</td>
+        <% end %>
         <td><%= link_to '詳細', admin_user_path(user) %></td>
         <td><%= link_to '編集', edit_admin_user_path(user) %></td>
         <td><%= link_to '削除', admin_user_path(user), method: :delete, data: { confirm: '本当に削除しますか?' } %></td>

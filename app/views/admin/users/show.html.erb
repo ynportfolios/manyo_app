@@ -1,5 +1,10 @@
 <h1><%= @user.name %>のページ</h1>
 <p>メールアドレス: <%= @user.email %></p>
+<% if @user.admin_flg %>
+  <p>管理者権限: あり</p>
+<% else %>
+  <p>管理者権限: なし</p>
+<% end %>
 
 <table class="table">
   <thead>
