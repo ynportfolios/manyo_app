@@ -34,6 +34,8 @@
     <%= form.select :priority, Task.priorities.keys, {}, class: 'form-control' %>
   </div>
 
+  <%= form.hidden_field :user_id, value: @current_user.id %>
+
   <div class="form-group">
     <%= form.submit %>
   </div>
