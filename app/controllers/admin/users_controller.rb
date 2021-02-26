@@ -21,7 +21,7 @@ class Admin::UsersController < ApplicationController
       flash[:success] = 'ユーザを編集しました。'
       redirect_to admin_user_path(@user.id)
     else
-      flash.now[:danger] = 'タスクの編集に失敗しました。'
+      flash.now[:danger] = 'ユーザの編集に失敗しました。'
       render :edit
     end
   end
@@ -30,7 +30,7 @@ class Admin::UsersController < ApplicationController
   end
   def destroy
     @user.destroy
-    flash[:success] = 'タスクを削除しました。'
+    flash[:success] = 'ユーザを削除しました。'
     redirect_to admin_users_path
   end
   private
