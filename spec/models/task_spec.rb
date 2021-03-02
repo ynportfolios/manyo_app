@@ -1,6 +1,9 @@
 require 'rails_helper'
 
 RSpec.describe Task, type: :model do
+  before do
+    @normal = FactoryBot.create(:normal)
+  end
   describe 'バリデーションのテスト' do
     context 'タスクのタイトルが空の場合' do
       it 'バリデーションにひっかる' do
@@ -17,15 +20,15 @@ RSpec.describe Task, type: :model do
     end
     context 'タスクのタイトルと詳細に内容が記載されている場合' do
       it 'バリデーションが通る' do
-        task = Task.new(name: '成功テスト', content: '成功テスト')
+        task = Task.new(name: '成功テスト', content: '成功テスト', user_id: @normal.id)
         expect(task).to be_valid
       end
     end
   end
   describe '検索機能' do
     # 必要に応じて、テストデータの内容を変更して構わない
-    let!(:task) { FactoryBot.create(:task, name: 'task', status: 1) }
-    let!(:second_task) { FactoryBot.create(:task, name: "sample", status: 2) }
+    let!(:task) { FactoryBot.create(:task, name: 'task', status: 1, user_id: @normal.id) }
+    let!(:second_task) { FactoryBot.create(:task, name: "sample", status: 2, user_id: @normal.id) }
     context 'scopeメソッドでタイトルのあいまい検索をした場合' do
       it "検索キーワードを含むタスクが絞り込まれる" do
         # title_seachはscopeで提示したタイトル検索用メソッドである。メソッド名は任意で構わない。

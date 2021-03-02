@@ -12,6 +12,17 @@
   <body>
     <div class="container">
       <%= render 'shared/flash_messages' %>
+      <% if logged_in? %>
+        <%= link_to "タスク一覧", tasks_path %>
+        <%= link_to "マイページ", user_path(current_user.id) %>
+        <% if current_user.admin_flg %>
+          <%= link_to "管理画面", admin_users_path %>
+        <% end %>
+        <%= link_to "ログアウト", session_path(current_user.id), method: :delete %>
+      <% else %>
+        <%= link_to "新規登録", new_user_path %>
+        <%= link_to "ログイン", new_session_path %>
+      <% end %>
       <%= yield %>
     </div>
   </body>

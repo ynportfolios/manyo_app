@@ -9,6 +9,8 @@ class Task < ApplicationRecord
   validates :status, presence: true
   validates :priority, presence: true
 
+  belongs_to :user
+
   scope :search_name_status, ->(name, status) do
     where('name LIKE ?', "%#{name}%").where(status: status)
   end

@@ -5,17 +5,17 @@ class TasksController < ApplicationController
 
   def index
     if params[:sort_expired]
-      @tasks = Task.all.order("deadline DESC").page(params[:page]).per(PER)
+      @tasks = @current_user.tasks.order("deadline DESC").page(params[:page]).per(PER)
     elsif params[:sort_priority]
-      @tasks = Task.all.order("priority DESC").page(params[:page]).per(PER)
+      @tasks = @current_user.tasks.order("priority DESC").page(params[:page]).per(PER)
     elsif params[:name] && params[:status] && !(params[:status] == 'なし') && !(params[:name] == '')
-      @tasks = Task.search_name_status(params[:name], params[:status]).page(params[:page]).per(PER)
+      @tasks = @current_user.tasks.search_name_status(params[:name], params[:status]).page(params[:page]).per(PER)
     elsif params[:name] && (params[:status] == 'なし') && !(params[:name] == '')
-      @tasks = Task.search_name(params[:name]).page(params[:page]).per(PER)
+      @tasks = @current_user.tasks.search_name(params[:name]).page(params[:page]).per(PER)
     elsif params[:status] && (params[:status] != 'なし') && (params[:name] == '')
-      @tasks = Task.search_status(params[:status]).page(params[:page]).per(PER)
+      @tasks = @current_user.tasks.search_status(params[:status]).page(params[:page]).per(PER)
     else
-      @tasks = Task.all.order("created_at DESC").page(params[:page]).per(PER)
+      @tasks = @current_user.tasks.order("created_at DESC").page(params[:page]).per(PER)
     end
   end
 
@@ -54,7 +54,7 @@ class TasksController < ApplicationController
   def destroy
     @task.destroy
     flash[:success] = 'タスクを削除しました。'
-    redirect_to root_path
+    redirect_to tasks_path
   end
 
   private
@@ -69,7 +69,8 @@ class TasksController < ApplicationController
       :content,
       :deadline,
       :status,
-      :priority
+      :priority,
+      :user_id
     )
   end
 end

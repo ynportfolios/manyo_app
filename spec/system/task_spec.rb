@@ -1,5 +1,12 @@
 require 'rails_helper'
 RSpec.describe 'タスク管理機能', type: :system do
+  before do
+    @normal = FactoryBot.create(:normal)
+    visit new_session_path
+    fill_in 'Email', with: 'normal@example.com'
+    fill_in 'Password', with: 'password'
+    click_on 'Log in'
+  end
   describe '新規作成機能' do
     context 'タスクを新規作成した場合' do
       it '作成したタスクが表示される' do
@@ -31,7 +38,7 @@ RSpec.describe 'タスク管理機能', type: :system do
     context '一覧画面に遷移した場合' do
       it '作成済みのタスク一覧が表示される' do
         # テストで使用するためのタスクを作成
-        task = FactoryBot.create(:task, name: 'task_name')
+        task = FactoryBot.create(:task, name: 'task_name', user_id: @normal.id)
         # タスク一覧ページに遷移
         visit tasks_path
         # visitした（遷移した）page（タスク一覧ページ）に「task」という文字列が
@@ -44,8 +51,8 @@ RSpec.describe 'タスク管理機能', type: :system do
     context 'タスクが作成日時の降順に並んでいる場合' do
       it '新しいタスクが一番上に表示される' do
         # ここに実装する
-        task_old = FactoryBot.create(:task, name: 'task_old', created_at: DateTime.new(2021, 3, 1, 1, 2))
-        task_new = FactoryBot.create(:task, name: 'task_new', created_at: DateTime.new(2021, 3, 1, 1, 3))
+        task_old = FactoryBot.create(:task, name: 'task_old', created_at: DateTime.new(2021, 3, 1, 1, 2), user_id: @normal.id)
+        task_new = FactoryBot.create(:task, name: 'task_new', created_at: DateTime.new(2021, 3, 1, 1, 3), user_id: @normal.id)
         visit tasks_path
         task_list = all('tbody tr')
         expect(task_list[0]).to have_content 'task_new'
@@ -55,8 +62,8 @@ RSpec.describe 'タスク管理機能', type: :system do
     context 'タスクが終了期限の降順に並んでいる場合' do
       it '終了期限が遠いタスクが一番上に表示される' do
         # ここに実装する
-        task_1 = FactoryBot.create(:task, name: 'task_1', deadline: DateTime.new(2021, 3, 1, 1, 3))
-        task_2 = FactoryBot.create(:task, name: 'task_2', deadline: DateTime.new(2021, 3, 1, 1, 2))
+        task_1 = FactoryBot.create(:task, name: 'task_1', deadline: DateTime.new(2021, 3, 1, 1, 3), user_id: @normal.id)
+        task_2 = FactoryBot.create(:task, name: 'task_2', deadline: DateTime.new(2021, 3, 1, 1, 2), user_id: @normal.id)
         visit tasks_path
         click_on '終了期限でソートする'
         task_list = all('tbody tr')
@@ -67,8 +74,8 @@ RSpec.describe 'タスク管理機能', type: :system do
     context 'タスクが優先順位の降順に並んでいる場合' do
       it '優先順位が高いタスクが一番上に表示される' do
         # ここに実装する
-        task_1 = FactoryBot.create(:task, name: 'task_1', created_at: DateTime.new(2021, 3, 1, 1, 2), priority: 2)
-        task_2 = FactoryBot.create(:task, name: 'task_2', created_at: DateTime.new(2021, 3, 1, 1, 3), priority: 1)
+        task_1 = FactoryBot.create(:task, name: 'task_1', created_at: DateTime.new(2021, 3, 1, 1, 2), priority: 2, user_id: @normal.id)
+        task_2 = FactoryBot.create(:task, name: 'task_2', created_at: DateTime.new(2021, 3, 1, 1, 3), priority: 1, user_id: @normal.id)
         visit tasks_path
         click_on '優先順位でソートする'
         task_list = all('tbody tr')
@@ -80,7 +87,7 @@ RSpec.describe 'タスク管理機能', type: :system do
   describe '詳細表示機能' do
      context '任意のタスク詳細画面に遷移した場合' do
        it '該当タスクの内容が表示される' do
-        task = FactoryBot.create(:task, name: 'task_name', content: 'task_content')
+        task = FactoryBot.create(:task, name: 'task_name', content: 'task_content', user_id: @normal.id)
         visit task_path(id: task.id)
         expect(page).to have_content 'task_name'
         expect(page).to have_content 'task_content'
@@ -90,12 +97,12 @@ RSpec.describe 'タスク管理機能', type: :system do
   describe '検索機能' do
     before do
       # 必要に応じて、テストデータの内容を変更して構わない
-      FactoryBot.create(:task, name: "task", status: 1)
-      FactoryBot.create(:task, name: "sample", status: 2)
+      FactoryBot.create(:task, name: "task", status: 1, user_id: @normal.id)
+      FactoryBot.create(:task, name: "sample", status: 2, user_id: @normal.id)
     end
     context 'タイトルであいまい検索をした場合' do
       it "検索キーワードを含むタスクで絞り込まれる" do
-        visit root_path
+        visit tasks_path
         # タスクの検索欄に検索ワードを入力する (例: task)
         fill_in 'task_name_field', with: 'task'
         # 検索ボタンを押す
@@ -108,7 +115,7 @@ RSpec.describe 'タスク管理機能', type: :system do
       it "ステータスに完全一致するタスクが絞り込まれる" do
         # ここに実装する
         # プルダウンを選択する「select」について調べてみること
-        visit root_path
+        visit tasks_path
         select '未着手', from: 'status_field'
         click_on '検索'
         expect(page).to have_content 'task'
@@ -118,7 +125,7 @@ RSpec.describe 'タスク管理機能', type: :system do
     context 'タイトルのあいまい検索とステータス検索をした場合' do
       it "検索キーワードをタイトルに含み、かつステータスに完全一致するタスク絞り込まれる" do
         # ここに実装する
-        visit root_path
+        visit tasks_path
         fill_in 'task_name_field', with: 'sample'
         select '着手', from: 'status_field'
         click_on '検索'
