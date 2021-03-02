@@ -15,6 +15,6 @@ end
 end
 5.times do |n|
   Label.create!(
-    name: "label#{n}"
+    name: "label_#{n}"
   )
 end
