@@ -46,7 +46,17 @@ RSpec.describe 'ラベル管理機能', type: :system do
         expect(task_list[0]).to have_content "label_0"
         expect(task_list[0]).not_to have_content "label_1"
         expect(task_list.size).to eq(1)
-     end
+      end
+    end
+    context 'タスクの編集ページにてラベルを変更した場合' do
+      it '変更したラベルがタスク一覧ページに表示される' do
+       visit tasks_path
+        first('tbody tr').click_on '編集'
+        uncheck 'label_0'
+        check 'label_1'
+        click_on '更新する'
+        expect(page).to have_content 'label_1'
+      end
     end
   end
 end
