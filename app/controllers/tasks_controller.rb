@@ -4,7 +4,9 @@ class TasksController < ApplicationController
   PER = 3
 
   def index
-    if params[:sort_expired]
+    if params[:label_id]
+      @tasks = @current_user.tasks.joins(:labels).where(labels: { id: params[:label_id] }).page(params[:page]).per(PER)
+    elsif params[:sort_expired]
       @tasks = @current_user.tasks.order("deadline DESC").page(params[:page]).per(PER)
     elsif params[:sort_priority]
       @tasks = @current_user.tasks.order("priority DESC").page(params[:page]).per(PER)
