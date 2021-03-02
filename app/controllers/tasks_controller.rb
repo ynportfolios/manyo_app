@@ -70,7 +70,8 @@ class TasksController < ApplicationController
       :deadline,
       :status,
       :priority,
-      :user_id
+      :user_id, 
+      { label_ids: [] }
     )
   end
 end

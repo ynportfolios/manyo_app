@@ -17,6 +17,7 @@
       <th>登録日時</th>
       <th>ステータス</th>
       <th>優先順位</th>
+      <th>ラベル</th>
     </tr>
   </thead>
 
@@ -29,6 +30,11 @@
         <td><%= task.created_at.strftime('%Y-%m-%d %H:%M:%S') %></td>
         <td><%= task.status %></td>
         <td><%= task.priority %></td>
+        <td>
+          <% task.labels.each do |label| %>
+            <%= label.name %>
+          <% end %>
+        </td>
         <td><%= link_to '詳細', task %></td>
         <td><%= link_to '編集', edit_task_path(task) %></td>
         <td><%= link_to '削除', task, method: :delete, data: { confirm: '本当に削除しますか?' } %></td>

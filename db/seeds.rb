@@ -13,3 +13,8 @@ end
     password: "password"
   )
 end
+5.times do |n|
+  Label.create!(
+    name: "label#{n}"
+  )
+end
